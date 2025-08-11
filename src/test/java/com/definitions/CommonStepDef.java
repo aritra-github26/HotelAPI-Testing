@@ -41,6 +41,11 @@ public class CommonStepDef {
         response = httpRequest.post(endpoint);
     }
 
+    @And("get the GET response object at endpoint {string}")
+    public void getTheGETResponseObjectAtEndpoint(String endpoint) {
+        response = httpRequest.get(endpoint);
+    }
+    
     @Then("check if status code is {string}")
     public void ifStatusCodeIs(String expectedStatusCode) {
         int statuscode = response.getStatusCode();
