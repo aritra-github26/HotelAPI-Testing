@@ -9,6 +9,10 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
 import static org.hamcrest.Matchers.is;
+
+import java.util.List;
+import java.util.Map;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class CommonStepDef {
@@ -46,6 +50,33 @@ public class CommonStepDef {
         response = httpRequest.get(endpoint);
     }
     
+    @Then("print all rooms from the list")
+    public void printAllRoomsFromList() {
+        List<Map<String, Object>> rooms = response.jsonPath().getList("");
+        if (rooms.isEmpty()) {
+            System.out.println("No rooms found");
+        } else {
+            rooms.forEach(r -> 
+                System.out.println("roomId: " + r.get("roomId") + ", roomType: " + r.get("roomType"))
+            );
+        }
+    }
+
+    @Then("verify room details for ID {string}")
+    public void verifyRoomDetailsForID(String expectedId) {
+        
+        io.restassured.path.json.JsonPath jsonPath = response.jsonPath();
+
+        int roomId = jsonPath.getInt("roomId");
+        String roomType = jsonPath.getString("roomType");
+        double roomPrice = jsonPath.getDouble("roomPrice");
+
+        org.testng.Assert.assertEquals(roomId, Integer.parseInt(expectedId), "Room ID does not match!");
+
+       
+        System.out.println("roomType: " + roomType + ", roomPrice: " + roomPrice);
+
+    }
     @Then("check if status code is {string}")
     public void ifStatusCodeIs(String expectedStatusCode) {
         int statuscode = response.getStatusCode();
