@@ -32,3 +32,21 @@ Feature: Testing the Booking URL endpoints
   Scenario: View room by invalid type
     When get the GET response object at endpoint "/viewRoomByType?roomType=TRIPLE"
     Then check if status code is "404"
+    
+   Scenario: Delete room by valid id
+    When get the DELETE response object at endpoint "/deleteRoomById/101"
+    Then check if status code is "200"
+    Then check if body does not have string "101"
+    
+   Scenario: Delete room by invalid id
+    When get the DELETE response object at endpoint "deleteRoomById/9999"
+    Then check if status code is "404"
+    
+   Scenario: Delete room by alphabetical id
+    When get the DELETE response object at endpoint "deleteRoomById/abc"
+    Then check if status code is "404"
+   
+   Scenario: Delete room by wrong HTTP request
+    When get the GET response object at endpoint "/deleteRoomById/101"
+    Then check if status code is "405"
+    

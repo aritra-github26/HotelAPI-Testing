@@ -45,11 +45,8 @@
             <artifactId>gherkin</artifactId>
             <version>26.2.0</version>
         </dependency>
-        <dependency>
-        	<groupId>CucumberDemo</groupId>
-        	<artifactId>CucumberDemo</artifactId>
-        	<version>0.0.1-SNAPSHOT</version>
-        </dependency>
+       
+        
         
         <dependency>
     <groupId>net.java.dev.jna</groupId>

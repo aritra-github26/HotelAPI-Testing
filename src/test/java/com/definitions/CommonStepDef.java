@@ -50,6 +50,11 @@ public class CommonStepDef {
         response = httpRequest.get(endpoint);
     }
     
+    @And("get the DELETE response object at endpoint {string}")
+    public void getTheDELETEResponseObjectAtEndpoint(String endpoint) {
+    	response = RestAssured.given().delete(endpoint);
+    }
+    
     @Then("print all rooms from the list")
     public void printAllRoomsFromList() {
         List<Map<String, Object>> rooms = response.jsonPath().getList("");
@@ -100,6 +105,13 @@ public class CommonStepDef {
     public void setRetrievedAccess_tokenAsEnvironmentVariable(String access) {
         System.setProperty(access, response.jsonPath().getString("access_token"));
         System.out.println("access_token: "+response.jsonPath().getString("access_token"));
+    }
+    
+    @Then("check if body does not have string {string}")
+    public void check_if_body_does_not_have_string(String str) {
+        String body = response.getBody().asString();
+        org.testng.Assert.assertFalse(body.contains(str), 
+            "Body contains the unexpected string: " + str);
     }
 
 
