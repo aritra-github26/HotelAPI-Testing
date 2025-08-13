@@ -38,9 +38,10 @@ Feature: Testing the Booking URL endpoints
     Then check if status code is "200"
     Then check if body does not have string "101"
     
-   Scenario: Delete room by invalid id
+  Scenario: Delete room by invalid id
     When get the DELETE response object at endpoint "deleteRoomById/9999"
     Then check if status code is "404"
+    Then check if body does not have string "101"
     
    Scenario: Delete room by alphabetical id
     When get the DELETE response object at endpoint "deleteRoomById/abc"
