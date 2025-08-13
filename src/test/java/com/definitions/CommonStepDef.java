@@ -8,6 +8,7 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
+
 import static org.hamcrest.Matchers.is;
 
 import java.util.List;
@@ -113,6 +114,22 @@ public class CommonStepDef {
         org.testng.Assert.assertFalse(body.contains(str), 
             "Body contains the unexpected string: " + str);
     }
+
+    @And("get the PUT response object at endpoint {string}")
+    public void getThePUTResponseObjectAtEndpoint(String endpoint) {
+        response = httpRequest.put(endpoint);
+    }
+
+    @Then("verify room details in response for roomId {string}")
+    public void verifyRoomDetailsInResponse(String expectedRoomId) {
+        System.out.println("Response Body:\n" + response.asString());
+        String actualRoomId = response.jsonPath().getString("roomId");
+        org.testng.Assert.assertEquals(actualRoomId, expectedRoomId, "Room ID mismatch!");
+
+        System.out.println("Room details added: " + response.asString());
+    }
+
+
 
 
 }
