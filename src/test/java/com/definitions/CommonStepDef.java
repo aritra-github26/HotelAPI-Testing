@@ -25,16 +25,18 @@ public class CommonStepDef {
     @Given("Set RestAssured Base URL for the Authentication")
     public void setRestAssuredBaseURLForTheAuthentication() {
         RestAssured.baseURI = configFileReader.getAuthURL();
+        httpRequest = RestAssured.given();
     }
 
     @Given("Set RestAssured Base URL for the Hotel Room BaseURL")
     public void setRestAssuredBaseURLForTheHotelRoomBaseURL() {
         RestAssured.baseURI = configFileReader.getBaseURL();
+        httpRequest = RestAssured.given();
     }
 
     @And("set request header {string} as {string}")
     public static void setRequestHeaderAs(String header, String value) {
-        httpRequest = RestAssured.given().header(header, value);
+        httpRequest = httpRequest.header(header, value);
     }
 
     @And("set parameter {string} in request body as {string}")
@@ -120,14 +122,49 @@ public class CommonStepDef {
         response = httpRequest.put(endpoint);
     }
 
+
     @Then("verify room details in response for roomId {string}")
     public void verifyRoomDetailsInResponse(String expectedRoomId) {
         System.out.println("Response Body:\n" + response.asString());
-        String actualRoomId = response.jsonPath().getString("roomId");
-        org.testng.Assert.assertEquals(actualRoomId, expectedRoomId, "Room ID mismatch!");
 
-        System.out.println("Room details added: " + response.asString());
+        List<Map<String, Object>> rooms = response.jsonPath().getList("$");
+        boolean found = false;
+
+        for (Map<String, Object> room : rooms) {
+            if (String.valueOf(room.get("roomId")).equals(expectedRoomId)) {
+                found = true;
+                org.testng.Assert.assertEquals(room.get("roomId").toString(), expectedRoomId, "Room ID mismatch!");
+                System.out.println("Room details added: " + room);
+                break;
+            }
+        }
+
+        org.testng.Assert.assertTrue(found, "Room with ID " + expectedRoomId + " not found in the response!");
     }
+
+    @Then("verify room details in update response for roomId {string} and price {string}")
+    public void verifyUpdatedRoomDetailsFromArray(String expectedRoomId, String expectedPrice) {
+        System.out.println("Update Response Body:\n" + response.asString());
+
+        List<Map<String, Object>> rooms = response.jsonPath().getList("$");
+        boolean found = false;
+
+        for (Map<String, Object> room : rooms) {
+            String actualRoomId = String.valueOf(room.get("roomId"));
+            String actualPrice = String.valueOf(room.get("roomPrice"));
+
+            if (actualRoomId.equals(expectedRoomId)) {
+                found = true;
+                org.testng.Assert.assertEquals(actualPrice, expectedPrice, "Room price mismatch after update!");
+                System.out.println("Updated room: " + room);
+                break;
+            }
+        }
+
+        org.testng.Assert.assertTrue(found, "Room with ID " + expectedRoomId + " not found in update response!");
+    }
+
+
 
 
 

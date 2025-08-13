@@ -56,6 +56,8 @@ Feature: Testing the Booking URL endpoints
     And set parameter "roomPrice" in request body as "1500"
     And get the PUT response object at endpoint "/updateRoomPrice"
     Then check if status code is "200"
+    Then verify room details in update response for roomId "101" and price "1500.0"
+
 
   Scenario: Update Room Price – Missing Price Parameter
     And set request header "Content-Type" as "application/x-www-form-urlencoded"
@@ -79,10 +81,8 @@ Feature: Testing the Booking URL endpoints
     And set parameter "roomType" in request body as "SINGLE"
     And set parameter "roomStatus" in request body as "NOTAVAILABLE"
     And set parameter "roomPrice" in request body as "20000"
-    And set request header "accept" as "application/json"
     And get the response object for post response at endpoint "/addRoom"
     Then check if status code is "200"
-
     Then verify room details in response for roomId "11"
 
 
@@ -93,7 +93,6 @@ Feature: Testing the Booking URL endpoints
     And set parameter "roomType" in request body as "SINGLE"
     And set parameter "roomStatus" in request body as "NOTAVAILABLE"
     And set parameter "roomPrice" in request body as "1500"
-    And set request header "accept" as "application/json"
     And get the response object for post response at endpoint "/addRoom"
     Then check if status code is "409"
 
