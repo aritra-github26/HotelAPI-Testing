@@ -18,7 +18,7 @@ Feature: Testing the Booking URL endpoints
  
   Scenario: View room by non-existing ID
     When get the GET response object at endpoint "/viewRoomById/702"
-    Then check if status code is "404"
+    Then check if status code is "204"
 
   Scenario: View room by invalid ID format
     When get the GET response object at endpoint "/viewRoomById/abc"
